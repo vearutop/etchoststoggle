@@ -2,20 +2,21 @@ package main
 
 import (
 	"bytes"
-	"github.com/getlantern/systray"
 	"io/ioutil"
 	"os"
+
+	"github.com/getlantern/systray"
 )
 
 func main() {
 	systray.Run(onReady, onExit)
 }
 
-var hostsPath = os.Getenv("windir") + `\system32\drivers\etc\hosts`
-
 func onReady() {
 	systray.SetIcon(getIcon("on.ico"))
-	systray.SetTitle("Hosts are blocked")
+	if updateTitle {
+		systray.SetTitle("Hosts are blocked")
+	}
 	systray.SetTooltip("Hosts are blocked")
 
 	mToggle := systray.AddMenuItem("Toggle", "Toggles hosts block")
@@ -75,11 +76,15 @@ func toggle() {
 func updBlocked(blocked bool) {
 	if blocked {
 		systray.SetIcon(getIcon("on.ico"))
-		systray.SetTitle("Hosts are blocked")
+		if updateTitle {
+			systray.SetTitle("Hosts are blocked")
+		}
 		systray.SetTooltip("Hosts are blocked")
 	} else {
 		systray.SetIcon(getIcon("off.ico"))
-		systray.SetTitle("Hosts are not blocked")
+		if updateTitle {
+			systray.SetTitle("Hosts are not blocked")
+		}
 		systray.SetTooltip("Hosts are not blocked")
 	}
 }
